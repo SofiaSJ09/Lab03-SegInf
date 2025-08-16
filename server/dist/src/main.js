@@ -11,11 +11,30 @@ async function bootstrap() {
         transform: true,
         transformOptions: { enableImplicitConversion: true },
     }));
-    app.enableCors({
-        origin: 'http://localhost:5173',
-    });
-    await app.listen(3001);
-    console.log('Risk Calculator API running on http://localhost:3001');
+    const isProd = process.env.NODE_ENV === 'production' ||
+        process.env.RENDER === 'true' ||
+        !!process.env.PORT;
+    if (isProd) {
+        const frontendOrigin = process.env.FRONTEND_ORIGIN;
+        app.enableCors({
+            origin: frontendOrigin
+                ? [frontendOrigin]
+                : [/^http:\/\/localhost:\d+$/, /\.vercel\.app$/],
+        });
+        if (process.env.API_PREFIX) {
+            app.setGlobalPrefix(process.env.API_PREFIX);
+        }
+        const port = parseInt(process.env.PORT || '3001', 10);
+        await app.listen(port, '0.0.0.0');
+        console.log(`Risk Calculator API running on http://0.0.0.0:${port}${process.env.API_PREFIX ? `/${process.env.API_PREFIX}` : ''}`);
+    }
+    else {
+        app.enableCors({
+            origin: 'http://localhost:5173',
+        });
+        await app.listen(3001);
+        console.log('Risk Calculator API running on http://localhost:3001');
+    }
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
