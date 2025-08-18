@@ -1,4 +1,5 @@
 import { calculateRiskScore, calculateRiskLevel, getRiskLevelColor } from './risk';
+import { describe, it, expect } from 'vitest';
 
 describe('Risk Utilities', () => {
   describe('calculateRiskScore', () => {

@@ -1,4 +1,4 @@
-import { RiskLevel } from './types';
+import type { RiskLevel } from './types';
 
 export function calculateRiskScore(likelihood: number, severity: number): number {
   return likelihood * severity;
@@ -29,22 +29,24 @@ export function getRiskLevelColor(riskLevel: RiskLevel): string {
 
 export function exportToCSV(risks: any[], filename: string = 'risks.csv'): void {
   const headers = ['Hazard', 'Likelihood', 'Severity', 'Risk Score', 'Risk Level', 'Created At'];
-  
+
   const csvContent = [
     headers.join(','),
-    ...risks.map(risk => [
-      `"${risk.hazard}"`,
-      risk.likelihood,
-      risk.severity,
-      risk.riskScore,
-      risk.riskLevel,
-      new Date(risk.createdAt).toLocaleDateString()
-    ].join(','))
+    ...risks.map(risk =>
+      [
+        `"${risk.hazard}"`,
+        risk.likelihood,
+        risk.severity,
+        risk.riskScore,
+        risk.riskLevel,
+        new Date(risk.createdAt).toLocaleDateString(),
+      ].join(',')
+    ),
   ].join('\n');
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
-  
+
   if (link.download !== undefined) {
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);

@@ -8,18 +8,16 @@ import { RiskTable } from '../components/RiskTable';
 
 export function RiskCalculator() {
   const [showForm, setShowForm] = useState(false);
-  const [editingRisk, setEditingRisk] = useState<Risk | null>(null);
+  const [editingRisk, setEditingRisk] = useState<Risk | undefined>(undefined);
   const [filters, setFilters] = useState<RiskFilters>({});
-  
+
   const queryClient = useQueryClient();
 
-  // Fetch risks with filters
   const { data: risks = [], isLoading, error } = useQuery({
     queryKey: ['risks', filters],
     queryFn: () => api.getRisks(filters),
   });
 
-  // Create risk mutation
   const createMutation = useMutation({
     mutationFn: api.createRisk,
     onSuccess: () => {
@@ -28,17 +26,15 @@ export function RiskCalculator() {
     },
   });
 
-  // Update risk mutation
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateRiskDto }) => 
+    mutationFn: ({ id, data }: { id: number; data: UpdateRiskDto }) =>
       api.updateRisk(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['risks'] });
-      setEditingRisk(null);
+      setEditingRisk(undefined);
     },
   });
 
-  // Delete risk mutation
   const deleteMutation = useMutation({
     mutationFn: api.deleteRisk,
     onSuccess: () => {
@@ -46,7 +42,6 @@ export function RiskCalculator() {
     },
   });
 
-  // Seed risks mutation
   const seedMutation = useMutation({
     mutationFn: api.seedRisks,
     onSuccess: () => {
@@ -77,7 +72,7 @@ export function RiskCalculator() {
 
   const handleCancelForm = () => {
     setShowForm(false);
-    setEditingRisk(null);
+    setEditingRisk(undefined);
   };
 
   const handleSeedRisks = () => {
@@ -86,14 +81,19 @@ export function RiskCalculator() {
     }
   };
 
-  const isLoadingAny = isLoading || createMutation.isPending || updateMutation.isPending || deleteMutation.isPending || seedMutation.isPending;
+  const isLoadingAny =
+    isLoading ||
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending ||
+    seedMutation.isPending;
 
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Risks</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Risks</h2>
           <p className="text-gray-600 mb-4">Failed to load risk data. Please check your connection.</p>
           <button
             onClick={() => window.location.reload()}
@@ -126,7 +126,7 @@ export function RiskCalculator() {
             <Plus className="w-4 h-4 mr-2" />
             Add New Risk
           </button>
-          
+
           <button
             onClick={handleSeedRisks}
             disabled={seedMutation.isPending}

@@ -1,16 +1,11 @@
-export enum RiskLevel {
-  LOW = 'Low',
-  MEDIUM = 'Medium',
-  HIGH = 'High',
-  EXTREME = 'Extreme',
-}
+export type RiskLevel = 'Low' | 'Medium' | 'High' | 'Extreme';
 
 export interface Risk {
   id: number;
   hazard: string;
-  likelihood: number;
-  severity: number;
-  riskScore: number;
+  likelihood: number; // 1..5
+  severity: number;   // 1..5
+  riskScore: number;  // likelihood * severity
   riskLevel: RiskLevel;
   createdAt: string;
 }
