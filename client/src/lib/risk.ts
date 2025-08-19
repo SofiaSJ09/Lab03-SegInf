@@ -1,26 +1,26 @@
-import type { RiskLevel } from './types';
+import { RiskLevel } from './types';
 
 export function calculateRiskScore(likelihood: number, severity: number): number {
   return likelihood * severity;
 }
 
 export function calculateRiskLevel(riskScore: number): RiskLevel {
-  if (riskScore >= 1 && riskScore <= 4) return 'Low';
-  if (riskScore >= 5 && riskScore <= 9) return 'Medium';
-  if (riskScore >= 10 && riskScore <= 16) return 'High';
-  if (riskScore >= 17 && riskScore <= 25) return 'Extreme';
+  if (riskScore >= 1 && riskScore <= 4) return RiskLevel.LOW;
+  if (riskScore >= 5 && riskScore <= 9) return RiskLevel.MEDIUM;
+  if (riskScore >= 10 && riskScore <= 16) return RiskLevel.HIGH;
+  if (riskScore >= 17 && riskScore <= 25) return RiskLevel.EXTREME;
   throw new Error('Invalid risk score');
 }
 
 export function getRiskLevelColor(riskLevel: RiskLevel): string {
   switch (riskLevel) {
-    case 'Low':
+    case RiskLevel.LOW:
       return 'bg-risk-low text-white';
-    case 'Medium':
+    case RiskLevel.MEDIUM:
       return 'bg-risk-medium text-white';
-    case 'High':
+    case RiskLevel.HIGH:
       return 'bg-risk-high text-white';
-    case 'Extreme':
+    case RiskLevel.EXTREME:
       return 'bg-risk-extreme text-white';
     default:
       return 'bg-gray-500 text-white';

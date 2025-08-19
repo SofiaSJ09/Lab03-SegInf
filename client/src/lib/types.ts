@@ -1,4 +1,9 @@
-export type RiskLevel = 'Low' | 'Medium' | 'High' | 'Extreme';
+export enum RiskLevel {
+  LOW = 'Low',
+  MEDIUM = 'Medium',
+  HIGH = 'High',
+  EXTREME = 'Extreme'
+}
 
 export interface Risk {
   id: number;
